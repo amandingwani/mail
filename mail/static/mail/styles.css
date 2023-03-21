@@ -8,10 +8,22 @@ textarea {
 
 .emails-view-email {
     border-style: solid;
+    border-width: 1px;
     cursor: pointer;
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
+    height: 26px;
 }
-/* 
-#email-view-from {
-    display: inline;
-} */
+
+.emails-view-email > .timestamp {
+    float: right;
+    color: darkgray;
+    padding-right: 10px;
+}
+
+.emails-view-email > .sender{
+    padding-left: 10px;
+}
+
+.emails-view-email > .subject{
+    padding-left: 20px;
+}

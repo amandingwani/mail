@@ -67,6 +67,7 @@ function load_mailbox(mailbox) {
         // now inside the above div, add sender, subject and timestamp
         // sender
         const sender = document.createElement('strong');
+        sender.classList.add('sender');
         if (mailbox !== 'sent'){
           sender.innerHTML = element.sender;
         }
@@ -77,16 +78,19 @@ function load_mailbox(mailbox) {
 
         // subject
         const subject = document.createElement('span');
+        subject.classList.add('subject');
         subject.innerHTML = element.subject;
         emailElement.append(subject);
 
         // timestamp
         const timestamp = document.createElement('span');
+        timestamp.classList.add('timestamp');
         timestamp.innerHTML = element.timestamp;
         emailElement.append(timestamp);
 
         if (element.read) {
-          emailElement.style.backgroundColor = 'grey'
+          emailElement.style.backgroundColor = 'grey';
+          timestamp.style.color = 'lightgrey';
         }
       });
     }
