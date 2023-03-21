@@ -67,7 +67,12 @@ function load_mailbox(mailbox) {
         // now inside the above div, add sender, subject and timestamp
         // sender
         const sender = document.createElement('strong');
-        sender.innerHTML = element.sender;
+        if (mailbox !== 'sent'){
+          sender.innerHTML = element.sender;
+        }
+        else {
+          sender.innerHTML = `To: ${element.recipients}`;
+        }
         emailElement.append(sender);
 
         // subject
