@@ -6,8 +6,11 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
   document.querySelector('#compose').addEventListener('click', compose_email);
 
-  // Add event listener to archive button
+  // Event listener for archive button
   document.querySelector('#email-view-archive').addEventListener('click', archive_email);
+
+  // Event listener for reply button
+  document.querySelector('#email-view-reply').addEventListener('click', reply_email);
 
   // send mail on click
   document.querySelector('#compose-form').addEventListener('submit', event => send_email(event))
@@ -140,15 +143,22 @@ function view_email(id) {
       timestamp = document.getElementById('email-view-timestamp');
       body = document.getElementById('email-view-body');
       archiveButton = document.getElementById('email-view-archive');
+      replyButton = document.querySelector('#email-view-reply');
 
       from.innerHTML = email.sender;
       to.innerHTML = email.recipients;
       subject.innerHTML = email.subject;
       timestamp.innerHTML = email.timestamp;
       body.innerHTML = email.body;
+
       archiveButton.innerHTML = (email.archived) ? 'Unarchive Email' : 'Archive Email';
       archiveButton.dataset.id = email.id;
       archiveButton.dataset.value = !email.archived;
+
+      replyButton.dataset.recipient = email.sender;
+      replyButton.dataset.subject = email.subject;
+      replyButton.dataset.body = email.body;
+      replyButton.dataset.timestamp = email.timestamp;
 
       // update the email as read, if not already
       if (!email.read) {
@@ -180,4 +190,21 @@ function archive_email() {
     () => load_mailbox('inbox')
   )
   .catch(error => console.log("Error: ", error));
+}
+
+function reply_email() {
+  compose_email();
+
+  replyButton = document.querySelector('#email-view-reply');
+  
+  // Prefill composition fields
+  document.querySelector('#compose-recipients').value = replyButton.dataset.recipient;
+  let subject = replyButton.dataset.subject;
+  if (subject.substring(0,4) !== "Re: ") {
+    subject = "Re: " + subject;
+  }
+  document.querySelector('#compose-subject').value = subject;
+  let body = `\nOn ${replyButton.dataset.timestamp} ${replyButton.dataset.recipient} wrote:\n\t`
+  body += replyButton.dataset.body;
+  document.querySelector('#compose-body').value = body;
 }
