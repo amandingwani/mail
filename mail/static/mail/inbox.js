@@ -1,10 +1,25 @@
+window.onpopstate = function(event) {
+  // console.log(history.state)
+  if (event.state) {
+    if (event.state.mailbox) {
+      // console.log(event.state.mailbox);
+      if(event.state.mailbox === 'compose') {
+        compose_email();
+      }
+      else {
+        load_mailbox(event.state.mailbox);
+      }
+    }
+  }
+};
+
 document.addEventListener('DOMContentLoaded', function() {
 
   // Use buttons to toggle between views
-  document.querySelector('#inbox').addEventListener('click', () => load_mailbox('inbox'));
-  document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
-  document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
-  document.querySelector('#compose').addEventListener('click', compose_email);
+  document.querySelector('#inbox').addEventListener('click', () => push_state_load_mailbox('inbox'));
+  document.querySelector('#sent').addEventListener('click', () => push_state_load_mailbox('sent'));
+  document.querySelector('#archived').addEventListener('click', () => push_state_load_mailbox('archive'));
+  document.querySelector('#compose').addEventListener('click', push_state_compose_email);
 
   // Event listener for archive button
   document.querySelector('#email-view-archive').addEventListener('click', archive_email);
@@ -16,11 +31,10 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#compose-form').addEventListener('submit', event => send_email(event))
 
   // By default, load the inbox
-  load_mailbox('inbox');
+  push_state_load_mailbox('inbox');
 });
 
 function compose_email() {
-
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#email-view').style.display = 'none';
@@ -32,8 +46,23 @@ function compose_email() {
   document.querySelector('#compose-body').value = '';
 }
 
+function push_state_compose_email() {
+  // add to browser history
+  history.pushState({mailbox: "compose"}, '');
+  // console.log(history.state)
+
+  compose_email();
+}
+
+function push_state_load_mailbox(mailbox) {
+  // add to browser history
+  history.pushState({mailbox: mailbox}, '');
+  // console.log(history.state)
+
+  load_mailbox(mailbox);
+}
+
 function load_mailbox(mailbox) {
-  
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#email-view').style.display = 'none';
